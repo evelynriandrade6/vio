@@ -4,8 +4,8 @@ document
   .addEventListener("submit", createUser);
 
 document.addEventListener("DOMContentLoaded", getAllUsers);
-
 document.addEventListener("DOMContentLoaded", getAllUsersTable);
+document.addEventListener("DOMContentLoaded", getAllOrgTable);
 
 function createUser(event) {
   // Previne o comportamento padrão do formulário, ou seja, impede que ele seja enviado e recarregue a página
@@ -139,6 +139,54 @@ function getAllUsersTable() {
     })
     .catch((error) => {
       alert("Erro ao obter usuários: " + error.message);
+      console.error("Erro: ", error.message);
+    });
+}
+
+function getAllOrgTable() {
+  fetch("http://10.89.240.3:5000/api/v1/organizador/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return response.json().then((err) => {
+        throw new Error(err.error);
+      });
+    })
+    .then((data) => {
+      const orgList = document.getElementById("org-list-tabela");
+      // Limpa a lista antes de adicionar novos itens
+      orgList.innerHTML = "";
+
+      // Verifica se há usuários retornados e os adiciona à tabela
+      data.organizadores.forEach((org) => {
+        // Cria uma nova linha
+        const tr = document.createElement("tr");
+
+        // Cria células para nome, cpf e email
+        const tdName = document.createElement("td");
+        tdName.textContent = org.nome;
+        tr.appendChild(tdName);
+
+        const tdcpf = document.createElement("td");
+        tdcpf.textContent = org.telefone;
+        tr.appendChild(tdcpf);
+
+        const tdEmail = document.createElement("td");
+        tdEmail.textContent = org.email;
+        tr.appendChild(tdEmail);
+
+        // Adiciona a linha à tabela
+        orgList.appendChild(tr);
+      });
+    })
+    .catch((error) => {
+      alert("Erro ao obter organizador: " + error.message);
       console.error("Erro: ", error.message);
     });
 }
