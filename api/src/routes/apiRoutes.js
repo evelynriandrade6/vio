@@ -9,15 +9,23 @@ router.post("/user/", userController.createUser);
 // router.delete("/user/:cpf", userController.deleteUser);
 
 const orgController = require("../controller/orgController");
+const ingressoController = require("../controller/ingressoController");
 
 router.post('/organizador', orgController.createOrg);
 router.get('/organizador', orgController.getAllOrg);
-router.put('/organizador', orgController.updateOrg);
+// router.put('/organizador', orgController.updateOrg);
 // router.delete('/organizador/:id', orgController.deleteOrg);
 
 // Rotas eventoController
 router.post('/evento', eventoController.createEvento);
 router.get('/evento', eventoController.getAllEventos);
 router.put('/evento', eventoController.updateEventos);
+router.delete('/evento/:id', eventoController.deleteEvento);
+
+// Rotas ingressoController
+router.post('/ingresso', ingressoController.createIngresso);
+router.get('/ingresso', ingressoController.getAllIngressos);
+router.put('/ingresso', ingressoController.updateIngressos);
+router.delete('/ingresso/:id', ingressoController.deleteIngresso);
 
 module.exports = router;
