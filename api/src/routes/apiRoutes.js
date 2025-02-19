@@ -4,7 +4,8 @@ const userController = require("../controller/userController");
 const eventoController = require ('../controller/eventoController');
 
 router.post("/user/", userController.createUser);
-// router.get("/user/", userController.getAllUsers);
+router.post("/user/login", userController.loginUser);
+router.get("/user/", userController.getAllUsers);
 // router.put("/user/", userController.updateUser);
 // router.delete("/user/:cpf", userController.deleteUser);
 

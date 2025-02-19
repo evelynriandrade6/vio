@@ -42,11 +42,56 @@ module.exports = class userController {
   }
 }
   
-  static async getAllUsers(req, res) {
-    return res
-      .status(200)
-      .json({ message: "Obtendo todos os usuários" });
+static async loginUser(req, res) {
+  const {email, password} = req.body;
+
+  if(!email || !password){
+    return res.status(400).json({error:'O e-mail e a senha são obrigatórios para o login.'})
   }
+
+  const query = `SELECT * FROM usuario WHERE email = ?`
+  try {
+    connect.query(query, [email], (err,results) => {
+      if(err){
+        console.log(err);
+        return res.status(500).json({error:"Erro interno do servidor"})
+      }
+      if (results.length===0){
+        return res.status(404).json({error:'Usuário não encontrado'})
+      }
+      const user = results[0];
+
+      if(user.password !== password){
+        return res.status(403).json({error:"Senha incorreta"})
+      }
+      return res.status(200).json({message:`Login efetuado com sucesso!`, user})
+    })
+  } catch(error){
+    console.log(error);
+    return res.status(500).json({error:'Erro interno do servidor'})
+  }
+}
+
+
+static async getAllUsers(req, res) {
+  const query = `SELECT * FROM usuario`;
+
+  try {
+    connect.query(query, function (err, results) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Obtendo todos os usuários", users: results });
+    });
+  } catch (error) {
+    console.error("Erro ao executar a consulta:", error);
+    return res.status(500).json({ error: "Erro interno do servidor" });
+  }
+}
 
   static async updateUser(req, res) {
     //Desestrutura e recupera os dados enviados via corpo da requisição
